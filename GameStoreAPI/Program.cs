@@ -20,5 +20,25 @@ app.MapGet("/", () => "GameStoreAPI");
 
 app.MapGet("/games", () => games);
 
+
+app.MapGet("/games/{id}",(int id) => games.Find((game) => game.Id == id)).WithName("GetGameById");
+
+app.MapPost("/games", (GameDto newGame) =>
+{
+    GameDto game = new GameDto(
+        games.Count + 1,
+        newGame.Title,
+        newGame.Genre,
+        newGame.Price,
+        newGame.ReleaseDate
+    );
+
+    games.Add(game);
+
+    return Results.CreatedAtRoute("GetGameById", new { id = game.Id }, game);
+});
+
+
+
 app.Run();
 
