@@ -16,15 +16,15 @@ namespace GameStore.Api.Endpoints;
 
     public static void MapGameApiEndpoints(this WebApplication app)
     {
+        var group = app.MapGroup("/games");
 
-app.MapGet("/", () => "GameStoreAPI");
-
-app.MapGet("/games", () => games);
+group.MapGet("/", () => games);
 
 
-app.MapGet("/games/{id}",(int id) => games.Find((game) => game.Id == id)).WithName("GetGameById");
 
-app.MapPost("/games", (GameDto newGame) =>
+group.MapGet("/{id}",(int id) => games.Find((game) => game.Id == id)).WithName("GetGameById");
+
+group.MapPost("/", (GameDto newGame) =>
 {
     GameDto game = new GameDto(
         games.Count + 1,
@@ -41,7 +41,7 @@ app.MapPost("/games", (GameDto newGame) =>
 
 
 
-app.MapPut("/games/{id}",(int id, UpdateGameDto updatedGame) =>
+group.MapPut("/{id}",(int id, UpdateGameDto updatedGame) =>
 {
     var game = games.Find((g) => g.Id == id);
     if (game == null)
@@ -62,7 +62,7 @@ app.MapPut("/games/{id}",(int id, UpdateGameDto updatedGame) =>
 });
 
 
-app.MapDelete("/games/{id}", (int id) =>
+group.MapDelete("/{id}", (int id) =>
 {
     var game = games.Find((g) => g.Id == id);
     if (game == null)
